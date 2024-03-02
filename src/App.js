@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import ReviewList from "./components/ReviewList";
+import ReviewHighlighter from "./components/ReviewHighlighter"; 
+import Tooltip from "./components/Tooltip";
 
-function App() {
+const App = () => {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch("/reviewsData.json");
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Review Sentiment Analysis</h1>
+      <ReviewList reviews={reviews} />
+      <Tooltip sentimentTopic="Spa" />
     </div>
   );
-}
+};
 
 export default App;
